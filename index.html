@@ -260,19 +260,10 @@
       margin-bottom: 10px;
     }
 
-    .screenshot-wrap a {
-      display: block;
-    }
-
     .screenshot-wrap img {
       display: block;
       width: 100%;
       height: auto;
-      transition: opacity 0.15s;
-    }
-
-    .screenshot-wrap a:hover img {
-      opacity: 0.88;
     }
 
     .screenshot-caption {
@@ -410,8 +401,6 @@
 
     .lightbox-close:hover { color: var(--text); }
 
-    /* Screenshot wraps are now plain divs — clicks handled by JS */
-    .screenshot-wrap a { pointer-events: none; }
   </style>
 </head>
 <body>
@@ -518,9 +507,7 @@
 
       <div class="screenshot-block full-width">
         <div class="screenshot-wrap">
-          <a href="screenshots/01-issues.png" target="_blank">
-            <img src="screenshots/01-issues.png" alt="Issues list with 3 active sessions at different pipeline stages">
-          </a>
+          <img src="screenshots/01-issues.png" alt="Issues list with 3 active sessions at different pipeline stages">
         </div>
         <p class="screenshot-caption">
           <strong>Issue list + active sessions.</strong> Three Claude Code sessions running in parallel —
@@ -531,9 +518,7 @@
 
       <div class="screenshot-block">
         <div class="screenshot-wrap">
-          <a href="screenshots/04-terminal.png" target="_blank">
-            <img src="screenshots/04-terminal.png" alt="Claude Code terminal session with colored output">
-          </a>
+          <img src="screenshots/04-terminal.png" alt="Claude Code terminal session with colored output">
         </div>
         <p class="screenshot-caption">
           <strong>Live terminal.</strong> Full xterm.js terminal embedded in the app — you see exactly what
@@ -544,9 +529,7 @@
 
       <div class="screenshot-block">
         <div class="screenshot-wrap">
-          <a href="screenshots/03-pr-threads.png" target="_blank">
-            <img src="screenshots/03-pr-threads.png" alt="PR diff view with inline thread annotations">
-          </a>
+          <img src="screenshots/03-pr-threads.png" alt="PR diff view with inline thread annotations">
         </div>
         <p class="screenshot-caption">
           <strong>Inline review threads.</strong> Annotate specific diff lines with comments.
@@ -557,9 +540,7 @@
 
       <div class="screenshot-block">
         <div class="screenshot-wrap">
-          <a href="screenshots/05-history.png" target="_blank">
-            <img src="screenshots/05-history.png" alt="Session history showing tool call timeline">
-          </a>
+          <img src="screenshots/05-history.png" alt="Session history showing tool call timeline">
         </div>
         <p class="screenshot-caption">
           <strong>Session history.</strong> Every tool call Claude made, in sequence, with timestamps.
@@ -570,9 +551,7 @@
 
       <div class="screenshot-block">
         <div class="screenshot-wrap">
-          <a href="screenshots/07-obsidian.png" target="_blank">
-            <img src="screenshots/07-obsidian.png" alt="Obsidian theme — cool violet palette">
-          </a>
+          <img src="screenshots/07-obsidian.png" alt="Obsidian theme — cool violet palette">
         </div>
         <p class="screenshot-caption">
           <strong>Obsidian theme.</strong> Two themes ship: Forge (warm amber, default) and Obsidian
