@@ -327,37 +327,24 @@
     .no   { color: var(--text-3); opacity: 0.5; }
     .part { color: #F0C040; }
 
-    /* ── Two-col status ── */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-    }
-
-    @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
-
-    .check-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .check-list li { font-size: 14px; color: var(--text-2); display: flex; align-items: baseline; gap: 10px; }
-    .check-list li::before { content: '✓'; color: var(--green); font-weight: 600; flex-shrink: 0; }
-
-    .x-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .x-list li { font-size: 14px; color: var(--text-3); display: flex; align-items: baseline; gap: 10px; }
-    .x-list li::before { content: '·'; color: var(--border); flex-shrink: 0; }
-
-    /* ── Stack ── */
-    .stack-row { display: flex; align-items: baseline; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--border-faint); }
-    .stack-row:first-child { border-top: 1px solid var(--border-faint); }
-    .stack-label { font-size: 12px; color: var(--text-3); width: 130px; flex-shrink: 0; }
-    .stack-value { font-family: var(--mono); font-size: 13px; color: var(--text-2); }
-
     /* ── Feedback ── */
     .feedback-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 28px; }
-    .feedback-box p { font-size: 14px; color: var(--text-2); margin-bottom: 16px; line-height: 1.7; }
-    .questions { list-style: none; display: flex; flex-direction: column; gap: 8px; counter-reset: q; }
-    .questions li { font-size: 14px; color: var(--text-3); display: flex; gap: 10px; counter-increment: q; }
-    .questions li::before { content: counter(q) '.'; color: var(--accent); font-family: var(--mono); font-size: 12px; font-weight: 600; width: 18px; flex-shrink: 0; margin-top: 1px; }
-    .reply-link { display: inline-block; margin-top: 20px; background: var(--elevated); border: 1px solid var(--border); color: var(--text-2); font-size: 14px; padding: 10px 20px; border-radius: 6px; text-decoration: none; transition: border-color 0.15s, color 0.15s; }
-    .reply-link:hover { border-color: var(--accent); color: var(--text); }
+    .feedback-box > p { font-size: 14px; color: var(--text-2); margin-bottom: 20px; line-height: 1.7; }
+    .feedback-form { display: flex; flex-direction: column; gap: 20px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-group > label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .radio-group { display: flex; flex-direction: column; gap: 5px; }
+    .radio-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2); cursor: pointer; }
+    .radio-item input[type=radio] { accent-color: var(--accent); flex-shrink: 0; }
+    .form-group textarea,
+    .form-group input[type=text] { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 9px 12px; font-size: 13px; color: var(--text); font-family: var(--sans); resize: vertical; width: 100%; box-sizing: border-box; }
+    .form-group textarea:focus,
+    .form-group input[type=text]:focus { outline: none; border-color: var(--accent); }
+    .form-group textarea { min-height: 72px; }
+    .form-submit { background: var(--accent); color: #0d0b09; border: none; border-radius: 6px; padding: 10px 24px; font-size: 14px; font-weight: 700; cursor: pointer; transition: opacity 0.15s; }
+    .form-submit:hover { opacity: 0.82; }
+    .form-note { font-size: 11px; color: var(--text-3); }
+    .form-success { display: none; margin-top: 16px; padding: 16px; background: rgba(74,222,128,0.07); border: 1px solid var(--green); border-radius: 8px; color: var(--green); font-size: 14px; text-align: center; }
 
     /* ── Footer ── */
     .footer { margin-top: 80px; padding-top: 24px; border-top: 1px solid var(--border-faint); font-size: 12px; color: var(--text-3); }
@@ -648,8 +635,8 @@
             <td class="no">—</td>
           </tr>
           <tr>
-            <td>Native desktop app (no browser)</td>
-            <td class="prism-col yes">✓ Wails / WebView</td>
+            <td>Native desktop app (Mac / Linux / WSL)</td>
+            <td class="prism-col yes">✓ Mac, Linux, WSL</td>
             <td class="no">— (terminal only)</td>
             <td class="no">—</td>
             <td class="no">—</td>
@@ -669,70 +656,62 @@
     </p>
   </div>
 
-  <!-- ── Status ── -->
-  <div class="section">
-    <h2>What's working / what isn't</h2>
-    <div class="two-col">
-      <div>
-        <ul class="check-list">
-          <li>Session start from GitHub Issues</li>
-          <li>Claude Code subprocess lifecycle (start, stop, restart)</li>
-          <li>Real-time terminal output streaming</li>
-          <li>Stage tracking via stdout markers</li>
-          <li>Plan approval / change request flow</li>
-          <li>PR auto-linking when Claude opens one</li>
-          <li>Session history + tool call log</li>
-          <li>Structured artifact rendering</li>
-          <li>Inline diff thread annotations</li>
-          <li>Plugin system (hooks, skills, subagents)</li>
-          <li>Two themes (Forge / Obsidian)</li>
-          <li>Mac + Windows builds via GitHub Actions</li>
-        </ul>
-      </div>
-      <div>
-        <ul class="x-list">
-          <li>Linear / Jira not wired up yet</li>
-          <li>No CI status panel yet (data fetched, not rendered)</li>
-          <li>Thread dispatch to active session not wired</li>
-          <li>Plugin marketplace UI not built</li>
-          <li>No session persistence across app restarts</li>
-          <li>No auth — single-user, single machine</li>
-          <li>Windows build untested end-to-end</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── Stack ── -->
-  <div class="section">
-    <h2>Stack</h2>
-    <div class="stack-row"><div class="stack-label">Framework</div><div class="stack-value">Wails v2 (Go + embedded WebView)</div></div>
-    <div class="stack-row"><div class="stack-label">Backend</div><div class="stack-value">Go — single native binary, no HTTP server</div></div>
-    <div class="stack-row"><div class="stack-label">Frontend</div><div class="stack-value">React + Vite + Tailwind v4</div></div>
-    <div class="stack-row"><div class="stack-label">UI ↔ Go</div><div class="stack-value">Wails IPC — in-process, no CORS</div></div>
-    <div class="stack-row"><div class="stack-label">Terminal</div><div class="stack-value">xterm.js (embedded, full ANSI)</div></div>
-    <div class="stack-row"><div class="stack-label">AI engine</div><div class="stack-value">claude CLI subprocess — not the API directly</div></div>
-    <div class="stack-row"><div class="stack-label">Config</div><div class="stack-value">~/.prism/config.yaml</div></div>
-    <div class="stack-row"><div class="stack-label">Repo</div><div class="stack-value"><a href="https://github.com/david-newspark/prism">github.com/david-newspark/prism</a></div></div>
-  </div>
-
   <!-- ── Feedback ── -->
   <div class="section">
-    <h2>Feedback I'm looking for</h2>
+    <h2>Share feedback</h2>
     <div class="feedback-box">
       <p>
-        Still deciding whether this is worth productising or whether it stays a personal tool.
-        The core hypothesis: AI coding creates real operational complexity, and a structured
-        pipeline + session manager is genuinely useful rather than just wrapping a CLI in a UI.
+        Anonymous · ~90 seconds. Still deciding whether this is worth productising.
+        Core hypothesis: AI coding creates real operational complexity — a structured
+        pipeline + session manager is genuinely useful, not just a CLI in a window.
       </p>
-      <ol class="questions">
-        <li>Does the plan/approve gate make sense as a first-class feature, or does it feel like overhead?</li>
-        <li>Is the "single window" framing compelling — or do you prefer your own terminal + GitHub tab setup?</li>
-        <li>Which of the three pillars (spec-driven / session management / issue+PR) would you actually reach for first?</li>
-        <li>The comparison table — where is it wrong? What does Superset or Antigravity actually do that I missed?</li>
-        <li>What's the first thing you'd cut, and what's the first thing you'd add?</li>
-      </ol>
-      <a class="reply-link" href="mailto:david@newsparkservices.com">Reply with thoughts →</a>
+      <form class="feedback-form" id="feedback-form"
+            action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <input type="hidden" name="_subject" value="PRISM alpha feedback">
+
+        <div class="form-group">
+          <label>Does the plan/approve gate make sense as a first-class feature?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="q1" value="Yes, it's the point"> Yes, that's the whole point</label>
+            <label class="radio-item"><input type="radio" name="q1" value="No, feels like overhead"> No, feels like overhead</label>
+            <label class="radio-item"><input type="radio" name="q1" value="Mixed — depends on implementation"> Mixed — depends on how it's implemented</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Is the single-window approach compelling vs. terminal + browser tabs?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="q2" value="Yes, I'd switch to this"> Yes, I'd switch to this</label>
+            <label class="radio-item"><input type="radio" name="q2" value="No, I prefer my own setup"> No, I prefer my own setup</label>
+            <label class="radio-item"><input type="radio" name="q2" value="Depends on build quality"> Depends on the polish / build quality</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Which pillar would you reach for first?</label>
+          <div class="radio-group">
+            <label class="radio-item"><input type="radio" name="q3" value="Spec-driven sessions"> Spec-driven sessions (issue → plan → code)</label>
+            <label class="radio-item"><input type="radio" name="q3" value="Session management + terminal"> Session management + terminal view</label>
+            <label class="radio-item"><input type="radio" name="q3" value="Issue + PR pipeline"> Issue + PR pipeline</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Anything wrong or missing in the comparison table?</label>
+          <input type="text" name="q4" placeholder="e.g. Cursor actually does X, or you missed tool Y…">
+        </div>
+
+        <div class="form-group">
+          <label>Open thoughts — what would you cut or add first?</label>
+          <textarea name="q5" placeholder="First thing I'd cut / add…"></textarea>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+          <button type="submit" class="form-submit">Send feedback →</button>
+          <span class="form-note">Anonymous · no account required</span>
+        </div>
+      </form>
+      <div class="form-success" id="form-success">Thanks — that's genuinely useful.</div>
     </div>
   </div>
 
@@ -775,6 +754,37 @@
   lbClose.addEventListener('click', closeLightbox);
   lb.addEventListener('click', e => { if (e.target === lb) closeLightbox(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  // Feedback form — AJAX submit so the page doesn't redirect
+  const feedbackForm = document.getElementById('feedback-form');
+  const formSuccess  = document.getElementById('form-success');
+  if (feedbackForm) {
+    feedbackForm.addEventListener('submit', async e => {
+      e.preventDefault();
+      const btn = feedbackForm.querySelector('.form-submit');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      try {
+        const res = await fetch(feedbackForm.action, {
+          method: 'POST',
+          body: new FormData(feedbackForm),
+          headers: { Accept: 'application/json' },
+        });
+        if (res.ok) {
+          feedbackForm.style.display = 'none';
+          formSuccess.style.display = 'block';
+        } else {
+          btn.textContent = 'Send feedback →';
+          btn.disabled = false;
+          alert('Something went wrong — try again.');
+        }
+      } catch {
+        btn.textContent = 'Send feedback →';
+        btn.disabled = false;
+        alert('Network error — try again.');
+      }
+    });
+  }
 </script>
 </body>
 </html>
