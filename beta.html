@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="forge">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PRISM — Private Beta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── Design tokens (Forge) ────────────────────────────── */
+    :root {
+      --bg-base:      #0F0D0C;
+      --bg-surface:   #17130F;
+      --bg-elevated:  #201A14;
+      --bg-overlay:   #2A2218;
+
+      --border-subtle:  #2E2418;
+      --border-visible: #3D3020;
+      --border-strong:  #5A4530;
+
+      --text-primary:   #F5EFE8;
+      --text-secondary: #9A8878;
+      --text-muted:     #6A5848;
+      --text-faint:     #3D3020;
+
+      --accent:        #E8820C;
+      --accent-hover:  #F5920F;
+      --accent-muted:  rgba(232,130,12,0.10);
+      --accent-border: rgba(232,130,12,0.22);
+
+      --success: #5DAD6F;
+      --warning: #F0C040;
+      --error:   #CC5545;
+      --info:    #5C8ECC;
+
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.5);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.6);
+
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 10px;
+      --radius-xl: 14px;
+
+      --font-ui:   'Sora', system-ui, sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    /* ── Reset ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      background: var(--bg-base);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: var(--accent-hover); }
+
+    /* ── Layout ───────────────────────────────────────────── */
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 6rem;
+    }
+
+    /* ── Top bar ──────────────────────────────────────────── */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: 0;
+    }
+
+    .topbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+    }
+
+    .version-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      background: var(--accent-muted);
+      border: 1px solid var(--accent-border);
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+    }
+
+    .beta-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.18rem 0.55rem;
+      border-radius: 999px;
+      background: rgba(240,192,64,0.08);
+      border: 1px solid rgba(240,192,64,0.2);
+      color: var(--warning);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    /* ── Hero ─────────────────────────────────────────────── */
+    .hero {
+      padding: 4rem 0 3rem;
+      text-align: center;
+    }
+
+    .hero-hex {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .hex-track { stroke: #2E2418; stroke-width: 3; fill: none; }
+    .hex-bit   { stroke-width: 3; fill: none; stroke-linecap: round; stroke-dasharray: 48 192; animation: lap 1.6s linear infinite; }
+
+    @keyframes lap { to { stroke-dashoffset: -240; } }
+
+    .hero-title {
+      font-size: 2.75rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto 2rem;
+      line-height: 1.7;
+    }
+
+    /* ── Download section ─────────────────────────────────── */
+    .download-row {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 1.25rem;
+    }
+
+    .dl-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-lg);
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .dl-btn-primary {
+      background: var(--accent);
+      color: #0F0D0C;
+    }
+    .dl-btn-primary:hover {
+      background: var(--accent-hover);
+      color: #0F0D0C;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(232,130,12,0.3);
+    }
+
+    .dl-btn-secondary {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-visible);
+    }
+    .dl-btn-secondary:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-overlay);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+    }
+
+    .dl-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      text-align: center;
+    }
+
+    .dl-meta span { color: var(--text-secondary); }
+
+    /* Platform note */
+    .platform-note {
+      margin-top: 1.25rem;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-md);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .platform-note code {
+      font-family: var(--font-mono);
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+      padding: 0.1em 0.4em;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ── Section headers ──────────────────────────────────── */
+    .section {
+      margin-top: 4rem;
+    }
+
+    .section-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-subtle);
+    }
+
+    /* ── Feature grid ─────────────────────────────────────── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .feature-card {
+      background: var(--bg-surface);
+      padding: 1.25rem 1.25rem 1.25rem 1.25rem;
+      transition: background 0.12s;
+    }
+    .feature-card:hover { background: var(--bg-elevated); }
+
+    .feature-icon {
+      font-size: 1.25rem;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .feature-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+    }
+
+    .feature-desc {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* ── Pipeline visual ──────────────────────────────────── */
+    .pipeline {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0;
+      padding: 1.5rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+    }
+
+    .pipe-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .pipe-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .pipe-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .pipe-arrow {
+      color: var(--text-faint);
+      font-size: 0.75rem;
+      padding: 0 0.25rem;
+      padding-bottom: 1rem;
+    }
+
+    .step-issue   .pipe-dot { background: #9A8878; }
+    .step-plan    .pipe-dot { background: #9D7BFF; }
+    .step-approve .pipe-dot { background: var(--accent); }
+    .step-build   .pipe-dot { background: #5C8ECC; }
+    .step-pr      .pipe-dot { background: #5DAD6F; }
+    .step-done    .pipe-dot { background: #F0C040; }
+
+    .step-issue   .pipe-label { color: #9A8878; }
+    .step-plan    .pipe-label { color: #9D7BFF; }
+    .step-approve .pipe-label { color: var(--accent); }
+    .step-build   .pipe-label { color: #5C8ECC; }
+    .step-pr      .pipe-label { color: #5DAD6F; }
+    .step-done    .pipe-label { color: #F0C040; }
+
+    .step-approve { position: relative; }
+    .step-approve::after {
+      content: '← you';
+      position: absolute;
+      bottom: -1.1rem;
+      font-size: 0.6rem;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      opacity: 0.7;
+      white-space: nowrap;
+    }
+
+    /* ── Prerequisites ────────────────────────────────────── */
+    .prereq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .prereq-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      font-size: 0.83rem;
+    }
+
+    .prereq-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 0.4rem;
+    }
+
+    .prereq-text { color: var(--text-secondary); }
+    .prereq-text strong { color: var(--text-primary); }
+    .prereq-text code {
+      font-family: var(--font-mono);
+      font-size: 0.8em;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+      padding: 0.1em 0.4em;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ── Checklist ────────────────────────────────────────── */
+    .checklist-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .check-section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.6rem;
+    }
+
+    .check-items {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: var(--radius-md);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.1s;
+      user-select: none;
+    }
+    .check-item:hover {
+      background: var(--bg-surface);
+      border-color: var(--border-subtle);
+    }
+    .check-item.checked {
+      background: var(--bg-surface);
+      border-color: var(--border-subtle);
+    }
+    .check-item.checked .check-box { background: var(--accent); border-color: var(--accent); }
+    .check-item.checked .check-box::after {
+      content: '';
+      display: block;
+      width: 5px;
+      height: 3px;
+      border-left: 1.5px solid #0F0D0C;
+      border-bottom: 1.5px solid #0F0D0C;
+      transform: rotate(-45deg) translate(1px, -1px);
+    }
+    .check-item.checked .check-label {
+      color: var(--text-muted);
+      text-decoration: line-through;
+      text-decoration-color: var(--text-faint);
+    }
+
+    .check-box {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1.5px solid var(--border-strong);
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.1s;
+    }
+
+    .check-label {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+    .check-label strong { color: var(--text-primary); font-weight: 500; }
+
+    .check-tag {
+      margin-left: auto;
+      flex-shrink: 0;
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.45rem;
+      border-radius: 999px;
+    }
+    .tag-critical {
+      background: rgba(204,85,69,0.1);
+      color: var(--error);
+      border: 1px solid rgba(204,85,69,0.2);
+    }
+    .tag-nice {
+      background: rgba(92,142,204,0.1);
+      color: var(--info);
+      border: 1px solid rgba(92,142,204,0.2);
+    }
+    .tag-note {
+      background: var(--accent-muted);
+      color: var(--accent);
+      border: 1px solid var(--accent-border);
+    }
+
+    /* ── Known issues ─────────────────────────────────────── */
+    .known-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .known-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.65rem 1rem;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      font-size: 0.82rem;
+    }
+
+    .known-sev {
+      font-size: 0.62rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .sev-low {
+      background: rgba(92,142,204,0.1);
+      color: var(--info);
+      border: 1px solid rgba(92,142,204,0.2);
+    }
+    .sev-med {
+      background: rgba(240,192,64,0.08);
+      color: var(--warning);
+      border: 1px solid rgba(240,192,64,0.2);
+    }
+
+    .known-text { color: var(--text-secondary); }
+    .known-text code {
+      font-family: var(--font-mono);
+      font-size: 0.85em;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+      padding: 0.1em 0.4em;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ── Config snippet ───────────────────────────────────── */
+    .code-block {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1rem 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+      overflow-x: auto;
+    }
+
+    .code-block .cm { color: var(--text-muted); }
+    .code-block .ky { color: var(--accent); }
+    .code-block .vl { color: #9D7BFF; }
+    .code-block .st { color: #5DAD6F; }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    .footer {
+      margin-top: 5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Divider ──────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 3rem 0;
+    }
+
+    /* ── Progress reset bar ───────────────────────────────── */
+    .reset-bar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .reset-btn {
+      font-family: var(--font-ui);
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: none;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.2rem 0.6rem;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+    .reset-btn:hover {
+      color: var(--text-secondary);
+      border-color: var(--border-visible);
+    }
+
+    .progress-bar-wrap {
+      height: 3px;
+      background: var(--border-subtle);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .progress-label {
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ── Top bar ──────────────────────────────────── -->
+    <div class="topbar">
+      <div class="topbar-brand">
+        <svg width="18" height="18" viewBox="0 0 100 100" style="flex-shrink:0">
+          <path d="M90,50 L70,84.6 L30,84.6 L10,50 L30,15.4 L70,15.4 Z"
+                stroke="#3D3020" stroke-width="4" fill="none"/>
+          <path d="M90,50 L70,84.6 L30,84.6 L10,50 L30,15.4 L70,15.4 Z"
+                stroke="#E8820C" stroke-width="4" fill="none"
+                stroke-dasharray="48 192"
+                style="animation: lap 1.6s linear infinite"/>
+        </svg>
+        PRISM
+      </div>
+      <div style="display:flex;gap:0.5rem;align-items:center">
+        <span class="beta-badge">Private Beta</span>
+        <span class="version-pill" id="versionPill">v0.12.0</span>
+      </div>
+    </div>
+
+    <!-- ── Hero ─────────────────────────────────────── -->
+    <div class="hero">
+      <div class="hero-hex">
+        <svg width="72" height="72" viewBox="0 0 100 100">
+          <path class="hex-track" d="M90,50 L70,84.6 L30,84.6 L10,50 L30,15.4 L70,15.4 Z"/>
+          <path class="hex-bit"   d="M90,50 L70,84.6 L30,84.6 L10,50 L30,15.4 L70,15.4 Z"
+                stroke="#E8820C"/>
+        </svg>
+      </div>
+      <h1 class="hero-title">PRISM</h1>
+      <p class="hero-subtitle">
+        GitHub issue → working PR, without leaving your desktop.<br>
+        Claude Code as a managed subprocess. No cloud. No browser.
+      </p>
+
+      <div class="download-row">
+        <a href="https://github.com/david-newspark/prism/releases/download/v0.12.0/prism-macos-arm64.zip" class="dl-btn dl-btn-primary" id="macBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+          </svg>
+          Download for macOS
+        </a>
+        <a href="https://github.com/david-newspark/prism/releases/download/v0.12.0/prism-linux-amd64" class="dl-btn dl-btn-secondary" id="linuxBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.504 0c-.155 0-.315.008-.480.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.09-2.362 2.926-2.362 6.643 0 4.792 2.923 9.358 4.393 9.358.34 0 .74-.2 1.063-.463.32.23.739.463 1.067.463 1.47 0 4.392-4.566 4.392-9.358 0-3.717-1.476-5.553-2.362-6.642-.75-1.067-.973-1.928-1.05-3.02-.064-1.49 1.056-5.965-3.17-6.298-.165-.013-.325-.022-.48-.022h.209z"/>
+          </svg>
+          Download for Linux
+        </a>
+      </div>
+      <p class="dl-meta">
+        <span>v0.12.0</span> · Apple Silicon (arm64) · Linux amd64
+      </p>
+
+      <div class="platform-note">
+        <strong style="color:var(--text-secondary)">macOS</strong> — unzip, right-click → Open. If Gatekeeper blocks it, run:
+        <code>xattr -rd com.apple.quarantine prism.app</code><br>
+        <strong style="color:var(--text-secondary)">Linux / WSL2</strong> — <code>chmod +x prism-linux-amd64 &amp;&amp; ./prism-linux-amd64</code>
+      </div>
+    </div>
+
+    <!-- ── How it works ──────────────────────────────── -->
+    <div class="section">
+      <div class="section-label">How it works</div>
+      <div class="pipeline">
+        <div class="pipe-step step-issue">
+          <div class="pipe-dot"></div>
+          <div class="pipe-label">Issue</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step step-plan">
+          <div class="pipe-dot"></div>
+          <div class="pipe-label">Plan</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step step-approve">
+          <div class="pipe-dot"></div>
+          <div class="pipe-label">Approve</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step step-build">
+          <div class="pipe-dot"></div>
+          <div class="pipe-label">Build</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step step-pr">
+          <div class="pipe-dot"></div>
+          <div class="pipe-label">PR opened</div>
+        </div>
+        <div class="pipe-arrow">→</div>
+        <div class="pipe-step step-done">
+          <div class="pipe-dot"></div>
+          <div class="pipe-label">Done</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Features ─────────────────────────────────── -->
+    <div class="section">
+      <div class="section-label">What's in this build</div>
+      <div class="feature-grid">
+
+        <div class="feature-card">
+          <span class="feature-icon">📋</span>
+          <div class="feature-name">Issue Queue</div>
+          <div class="feature-desc">Browse open GitHub (or Linear) issues. One click to start a session on any issue.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">⌨️</span>
+          <div class="feature-name">AI Collab Terminal</div>
+          <div class="feature-desc">Full xterm.js terminal running Claude Code. Multiple concurrent sessions, each isolated and persisted.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">✅</span>
+          <div class="feature-name">Plan Approval Gate</div>
+          <div class="feature-desc">Claude surfaces its plan inline before touching any code. You approve, reject, or comment per step.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🔀</span>
+          <div class="feature-name">PR Panel</div>
+          <div class="feature-desc">When a PR opens, review the diff and merge without leaving the app. Ship-all mode for batch merges.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">📊</span>
+          <div class="feature-name">Agent Progress Tree</div>
+          <div class="feature-desc">Live structured view of what Claude is doing — skill runs, sub-steps, and status as they happen.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">📈</span>
+          <div class="feature-name">Insights</div>
+          <div class="feature-desc">Session analytics grouped by issue — token usage, stage timings, and project-level stat cards.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🕒</span>
+          <div class="feature-name">Session History</div>
+          <div class="feature-desc">Every session persisted locally. Search, pin, archive, and restore. Survives restarts and updates.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">⚙️</span>
+          <div class="feature-name">Settings</div>
+          <div class="feature-desc">Custom data dir, model tiers, auto-approve level, PR rules scoped to project or global.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🎨</span>
+          <div class="feature-name">Two Themes</div>
+          <div class="feature-desc">Forge (warm amber) and Obsidian (cool violet). Switchable live from the toolbar.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🏠</span>
+          <div class="feature-name">Fully Local</div>
+          <div class="feature-desc">Native binary + embedded WebView. No Electron, no cloud infra, no Anthropic API key beyond Claude Code itself.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">🔍</span>
+          <div class="feature-name">Call Graph Panel</div>
+          <div class="feature-desc">PR review now shows an interactive call graph (Go + JS/TS). Select a node and hit "Explain with AI" to send a targeted prompt to the active session.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">✏️</span>
+          <div class="feature-name">Inline Code Editor</div>
+          <div class="feature-desc">Edit files directly inside the PR review panel for surgical fixes post-review — no context switch needed before merging.</div>
+        </div>
+
+        <div class="feature-card">
+          <span class="feature-icon">⚡</span>
+          <div class="feature-name">RTK Integration</div>
+          <div class="feature-desc">Settings → AI Tools shows RTK (token optimizer) status. Insights shows a live savings chart — how many tokens RTK is cutting per command type.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Prerequisites ─────────────────────────────── -->
+    <div class="section">
+      <div class="section-label">Prerequisites</div>
+      <div class="prereq-list">
+        <div class="prereq-item">
+          <div class="prereq-dot"></div>
+          <div class="prereq-text">
+            <strong>Claude Code CLI</strong> — installed and authenticated (<code>claude</code> on your PATH).
+            Get it at <a href="https://claude.ai/code" target="_blank">claude.ai/code</a>.
+          </div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-dot"></div>
+          <div class="prereq-text">
+            <strong>Git</strong> configured with access to your GitHub org (needed for PR creation and issue listing).
+          </div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-dot"></div>
+          <div class="prereq-text">
+            <strong>GitHub CLI</strong> (<code>gh</code>) authenticated — PRISM uses it for issue and PR operations.
+          </div>
+        </div>
+        <div class="prereq-item">
+          <div class="prereq-dot"></div>
+          <div class="prereq-text">
+            <strong>A GitHub project</strong> to point PRISM at. You'll set this in Settings on first launch — just enter your <code>org/repo</code>.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Config ──────────────────────────────────── -->
+    <div class="section">
+      <div class="section-label">Default config</div>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1rem;">
+        PRISM creates <code style="font-family:var(--font-mono);color:var(--text-secondary);background:var(--bg-elevated);padding:0.1em 0.4em;border-radius:4px">~/.prism/config.yaml</code> on first run. Zero config required to get started — but here's what you can tune:
+      </p>
+      <div class="code-block">
+        <span class="cm"># ~/.prism/config.yaml</span><br>
+        <br>
+        <span class="ky">provider</span>: <span class="st">"github"</span>  <span class="cm"># or "linear"</span><br>
+        <br>
+        <span class="ky">skip_permissions</span>: <span class="vl">true</span>   <span class="cm"># passes --dangerously-skip-permissions</span><br>
+        <br>
+        <span class="ky">model_tiers</span>:<br>
+        &nbsp;&nbsp;<span class="ky">light</span>:    <span class="st">claude-haiku-4-5-20251001</span><br>
+        &nbsp;&nbsp;<span class="ky">standard</span>: <span class="st">claude-sonnet-4-6</span><br>
+        &nbsp;&nbsp;<span class="ky">deep</span>:     <span class="st">claude-sonnet-4-6</span>  <span class="cm"># swap for opus on complex work</span><br>
+        <br>
+        <span class="ky">automation</span>:<br>
+        &nbsp;&nbsp;<span class="ky">auto_approve_level</span>: <span class="vl">0</span>  <span class="cm"># 0 = all gates need human approval</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- ── Beta checklist ────────────────────────────── -->
+    <div class="section">
+      <div class="section-label">Beta review checklist</div>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-bottom:1.25rem;">
+        Check these off as you go. Your notes on anything that felt rough, broken, or confusing are the most useful feedback.
+      </p>
+
+      <div class="reset-bar">
+        <button class="reset-btn" onclick="resetChecklist()">Reset progress</button>
+      </div>
+
+      <div class="progress-label" id="progressLabel">0 / 23 complete</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+
+      <div class="checklist-group">
+
+        <!-- Core flow -->
+        <div>
+          <div class="check-section-title">Core flow</div>
+          <div class="check-items">
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Install and first launch — app opens, no crashes</div>
+              <span class="check-tag tag-critical">critical</span>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label"><strong>Settings → add a project</strong> (org/repo) — issue list populates</div>
+              <span class="check-tag tag-critical">critical</span>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label"><strong>Click an issue</strong> — session starts, terminal opens, Claude begins planning</div>
+              <span class="check-tag tag-critical">critical</span>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label"><strong>Plan appears inline</strong> — approve it and watch implementation begin</div>
+              <span class="check-tag tag-critical">critical</span>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label"><strong>PR opens</strong> — visible in the PR panel with diff and merge button</div>
+              <span class="check-tag tag-critical">critical</span>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Reject a plan — type a reason, re-plan triggers cleanly</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- UI & navigation -->
+        <div>
+          <div class="check-section-title">UI & navigation</div>
+          <div class="check-items">
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Theme toggle — Forge ↔ Obsidian switches live without reload</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Multiple sessions — start 2+ sessions, switch between them, terminals are independent</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Session history — previous sessions visible after app restart</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Agent progress tree — collapsible skill steps visible during a run</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Insights panel — session stats appear and update correctly</div>
+              <span class="check-tag tag-nice">nice to have</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings -->
+        <div>
+          <div class="check-section-title">Settings</div>
+          <div class="check-items">
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Edit a project — name / repo change saves and reflects in header</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">PR rules — add a global rule; confirm it shows up in the next session's context</div>
+              <span class="check-tag tag-nice">nice to have</span>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Data dir change — migrates history and DB without data loss</div>
+              <span class="check-tag tag-note">careful</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- New in v0.12.0 -->
+        <div>
+          <div class="check-section-title">New in v0.12.0</div>
+          <div class="check-items">
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label"><strong>Call graph</strong> — open a PR, switch to the Call Graph tab, click a node and use "Explain with AI"</div>
+              <span class="check-tag tag-note">new</span>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label"><strong>Inline editor</strong> — open a PR diff, edit a file inline and confirm the change saves correctly</div>
+              <span class="check-tag tag-note">new</span>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label"><strong>RTK panel</strong> — Settings → AI Tools shows RTK status; Insights shows savings chart if RTK installed</div>
+              <span class="check-tag tag-nice">nice to have</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edge cases -->
+        <div>
+          <div class="check-section-title">Edge cases &amp; error handling</div>
+          <div class="check-items">
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Kill / restart the app mid-session — session resumes or shows correct final state</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Start a session with no network — error state is clear, no silent hang</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Issue list refresh — pull-to-refresh or nav away/back fetches latest issues</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">PR list — shows open PRs for the configured project, links open in system browser</div>
+            </div>
+            <div class="check-item" onclick="toggleCheck(this)">
+              <div class="check-box"></div>
+              <div class="check-label">Overall — anything that felt confusing, slow, or just wrong</div>
+              <span class="check-tag tag-note">subjective</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── Known issues ──────────────────────────────── -->
+    <div class="section">
+      <div class="section-label">Known rough edges</div>
+      <div class="known-list">
+        <div class="known-item">
+          <span class="known-sev sev-low">info</span>
+          <div class="known-text">
+            <strong style="color:var(--text-primary)">macOS: unsigned binary.</strong>
+            Right-click → Open on first launch, or run <code>xattr -rd com.apple.quarantine prism.app</code> if Gatekeeper blocks it.
+          </div>
+        </div>
+        <div class="known-item">
+          <span class="known-sev sev-low">info</span>
+          <div class="known-text">
+            <strong style="color:var(--text-primary)">Windows not yet supported.</strong>
+            macOS Apple Silicon and Linux amd64 only in this build.
+          </div>
+        </div>
+        <div class="known-item">
+          <span class="known-sev sev-med">note</span>
+          <div class="known-text">
+            <strong style="color:var(--text-primary)">First run may take a moment</strong> while Claude Code initialises its plugin on your machine.
+          </div>
+        </div>
+        <div class="known-item">
+          <span class="known-sev sev-med">note</span>
+          <div class="known-text">
+            <strong style="color:var(--text-primary)">Complex issues consume significant tokens.</strong>
+            Claude Code's model tier settings in <code>~/.prism/config.yaml</code> let you tune which model handles each phase.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Footer ────────────────────────────────────── -->
+    <div class="footer">
+      PRISM — Private Beta · <span id="footerVersion">v0.12.0</span> · Thanks for testing
+    </div>
+
+  </div>
+
+  <style>
+    /* inline animation for topbar hex */
+    @keyframes lap { to { stroke-dashoffset: -240; } }
+  </style>
+
+  <script>
+    /* ── Checklist ── */
+    const STORAGE_KEY = 'prism-beta-checklist';
+
+    function saveState() {
+      const items = document.querySelectorAll('.check-item');
+      const state = Array.from(items).map(el => el.classList.contains('checked'));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      updateProgress();
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      const state = JSON.parse(raw);
+      const items = document.querySelectorAll('.check-item');
+      items.forEach((el, i) => {
+        if (state[i]) el.classList.add('checked');
+      });
+      updateProgress();
+    }
+
+    function toggleCheck(el) {
+      el.classList.toggle('checked');
+      saveState();
+    }
+
+    function updateProgress() {
+      const items = document.querySelectorAll('.check-item');
+      const total = items.length;
+      const done = document.querySelectorAll('.check-item.checked').length;
+      document.getElementById('progressLabel').textContent = `${done} / ${total} complete`;
+      document.getElementById('progressFill').style.width = `${(done / total) * 100}%`;
+    }
+
+    function resetChecklist() {
+      document.querySelectorAll('.check-item.checked').forEach(el => el.classList.remove('checked'));
+      localStorage.removeItem(STORAGE_KEY);
+      updateProgress();
+    }
+
+    loadState();
+
+    /* ── Platform detection — highlight the right download ── */
+    window.addEventListener('DOMContentLoaded', () => {
+      const ua = navigator.userAgent.toLowerCase();
+      const isMac = /mac/.test(ua);
+      const macBtn = document.getElementById('macBtn');
+      const linuxBtn = document.getElementById('linuxBtn');
+
+      if (!isMac && macBtn && linuxBtn) {
+        // Swap primary style to Linux if not on Mac
+        macBtn.classList.remove('dl-btn-primary');
+        macBtn.classList.add('dl-btn-secondary');
+        linuxBtn.classList.remove('dl-btn-secondary');
+        linuxBtn.classList.add('dl-btn-primary');
+      }
+    });
+  </script>
+</body>
+</html>
